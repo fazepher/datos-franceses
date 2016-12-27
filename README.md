@@ -7,6 +7,7 @@ Los primeros datos que recabamos son las Bases de Datos sobre Nacionalidad e Inm
 Como ejemplo, tomando el año 2007 descargamos la base [IMG1](http://www.insee.fr/fr/statistiques/2120456?sommaire=2402753), que tiene las siguientes variables:
 
 * AGE4 (4 grupos de edad)
+⋅⋅* 00: menores de 15 años
 ..* 00: menores de 15 años
 ..* 15: entre 15 y 24 años
 ..* 25: entre 25 y 54 años
