@@ -1,0 +1,6 @@
+Esta carpeta contiene las bases administrativas de la geografía de cada año. 
+Tiene cuatro tipos de archivos. 
+1. Bases de Comunas con sus nombres oficiales
+2. Bases de Departamentos con sus nombres oficiales
+3. Bases de Regiones con sus nombres oficiales
+4. Auxiliares que identifican las regiones con los departamentos
