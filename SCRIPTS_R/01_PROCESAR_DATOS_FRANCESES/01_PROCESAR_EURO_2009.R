@@ -3,13 +3,12 @@
 ###################################### FAZH ITAM 2017 130435 ############################################
 #########################################################################################################
 
-### PRE¡MBULO ####
+### PRE√ÅMBULO ####
 library(tidyverse)
 library(magrittr)
 library(stringr)
-setwd("C:/Users/Fernando Antonio/Documents/ITAM/Tesis/datos-franceses")
 
-### DATOS DE VOTACI”N POR CASILLA ####
+### DATOS DE VOTACI√ìN POR CASILLA ####
 
 euro_09 <- read_csv2(file = "DATOS_BRUTOS/ER09_BVOT_FAZH.txt", 
                      col_names = c("VUELTA",
@@ -19,22 +18,22 @@ euro_09 <- read_csv2(file = "DATOS_BRUTOS/ER09_BVOT_FAZH.txt",
                                    "VOT_CANDIDATO"),
                      col_types = c("ccccciiiccci"),
                      locale = locale(encoding = "latin1")) %>%
-  # Filtramos a las comunas de Francia continental y CÛrsega
+  # Filtramos a las comunas de Francia continental y C√≥rsega
   filter(!(substr(COD_DEPARTAMENTO,1,1) == "Z")) %>% 
   # Filtramos a los resultados de la primera vuelta
   filter(VUELTA == 1) %>%
-  # Modificamos los Nombres de las comunas cuando son Arrondisements de ParÌs, Lyon y Marsella
+  # Modificamos los Nombres de las comunas cuando son Arrondisements de Par√≠s, Lyon y Marsella
   mutate(NOM_COMUNA = if_else(NOM_COMUNA == "Paris",paste("Paris",substr(CASILLA,1,2), sep = " "),
                               if_else(NOM_COMUNA == "Lyon", paste("Lyon",substr(CASILLA,2,2), sep = " "),
                                       if_else(NOM_COMUNA == "Marseille",paste("Marseille",substr(CASILLA,1,2), sep = " "),
                                               NOM_COMUNA)))) %>%
-  # Agregamos el CODGEO del INSEE para las comunas (ajustando para los Arrondisements de ParÌs, Lyon y Marsella)
+  # Agregamos el CODGEO del INSEE para las comunas (ajustando para los Arrondisements de Par√≠s, Lyon y Marsella)
   mutate(CODGEO = paste(COD_DEPARTAMENTO,COD_COMUNA,sep="")) %>%
   mutate(CODGEO = if_else(CODGEO == "75056",paste("751",substr(CASILLA,1,2),sep=""),
                           if_else(CODGEO == "69123", paste("6938",substr(CASILLA,2,2),sep=""),
                                   if_else(CODGEO == "13055",paste("132",substr(CASILLA,1,2),sep=""),
                                                      CODGEO)))) %>%
-  # Modificamos el cÛdigo de casillas para hacerlo ˙nico
+  # Modificamos el c√≥digo de casillas para hacerlo √∫nico
   mutate(CASILLA = paste(CODGEO,CASILLA,sep="_"))
   
 
@@ -71,7 +70,7 @@ IMG2A_09 <- read_csv2(file = "DATOS_BRUTOS/BTT_TD_IMG2A_2009.txt",
                       col_types = "cccccccccd",
                       locale = locale(decimal_mark = ",", encoding = "latin1"),
                       skip = 1) %>% 
-  # AtenciÛn con los cÛdigos
+  # Atenci√≥n con los c√≥digos
   mutate(C_SEXO = factor(C_SEXO,labels = c("HOMBRES","MUJERES")),
          C_EDAD4_A = factor(C_EDAD4_A),
          C_TIPO_ACT = factor(C_TIPO_ACT,labels = c("EMPLEADOS","DESEMPLEADOS","RETIRADOS","ESTUDIANTES","HOGAR","OTROS")),
@@ -82,11 +81,11 @@ IMG2A_09 <- read_csv2(file = "DATOS_BRUTOS/BTT_TD_IMG2A_2009.txt",
 
 ### ERRORES DE  COMUNAS ####
 
-# Para homologar resultados electorales y censo necesitamos las geografÌas administrativas oficiales para cada base
+# Para homologar resultados electorales y censo necesitamos las geograf√≠as administrativas oficiales para cada base
 COMUNAS_09 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2009.txt", 
                          delim = "\t",locale = locale(encoding = "latin1")) %>% 
   transmute(CODGEO = paste(DEP,COM,sep=""), NOM_COMUNA = NCCENR, ART = ARTMIN) %>% 
-  # AÒadimos el artÌculo al nombre
+  # A√±adimos el art√≠culo al nombre
   mutate(NOM_COMUNA = if_else(is.na(ART),
                               NOM_COMUNA,
                               paste(substring(ART,2,nchar(ART)-1),NOM_COMUNA,sep=" "))) %>% 
@@ -101,7 +100,7 @@ COMUNAS_09 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2009.txt",
 COMUNAS_11 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2011.txt", 
                          delim = "\t",locale = locale(encoding = "latin1")) %>% 
   transmute(CODGEO = paste(DEP,COM,sep=""), NOM_COMUNA = NCCENR, ART = ARTMIN) %>% 
-  # AÒadimos el artÌculo al nombre
+  # A√±adimos el art√≠culo al nombre
   mutate(NOM_COMUNA = if_else(is.na(ART),
                               NOM_COMUNA,
                               paste(substring(ART,2,nchar(ART)-1),NOM_COMUNA,sep=" "))) %>% 
@@ -120,15 +119,15 @@ euro_09 <- euro_09 %>%
   select(-NOM_COMUNA.y) %>%
   rename(NOM_COMUNA = NOM_COMUNA.x)
 
-# Comunas que est·n en los resultados electorales, pero no en el censo y que sÌ existÌan en 2009
+# Comunas que est√°n en los resultados electorales, pero no en el censo y que s√≠ exist√≠an en 2009
 ERRORES_COMUNAS <- anti_join(euro_09,IMG2A_09,by="CODGEO") %>% 
   semi_join(COMUNAS_09,by="CODGEO") %>% 
   select(CODGEO,NOM_COMUNA,NOM_DEPARTAMENTO) %>% 
   distinct %>% 
   cbind(MOTIVO_ERROR = NA)
 # Errores por que se agregaron a otra comuna 
-ERRORES_COMUNAS$MOTIVO_ERROR <- c("09/12/2010 : Fort-Mardyck est rattachÈe ‡ Dunkerque (fusion association).",
-                                  "09/12/2010 : Saint-Pol-sur-Mer est rattachÈe ‡ Dunkerque (fusion association).")
+ERRORES_COMUNAS$MOTIVO_ERROR <- c("09/12/2010 : Fort-Mardyck est rattach√©e √† Dunkerque (fusion association).",
+                                  "09/12/2010 : Saint-Pol-sur-Mer est rattach√©e √† Dunkerque (fusion association).")
 
 # Se revisaron, las agrupaciones en el sitio del INSEE
 # Corregimos el error en los resultados electorales con el nombre existente en 2009. 
@@ -138,7 +137,7 @@ euro_09 <- euro_09 %>%
   mutate(COD_COMUNA = if_else(CODGEO %in% c("59248","59540","59183"),"183",COD_COMUNA),
          NOM_COMUNA = if_else(CODGEO %in% c("59248","59540","59183"),"Dunkerque",NOM_COMUNA))
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que sÌ existÌan en 2009
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que s√≠ exist√≠an en 2009
 ERRORES_COMUNAS <- anti_join(IMG2A_09,euro_09,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
@@ -161,14 +160,14 @@ IMG2A_09 <- ERRORES_COMUNAS %>%
   extract2("CODGEO") %>%
   {filter(IMG2A_09,!{CODGEO %in% .})}
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que sÌ existÌan en 2011
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que s√≠ exist√≠an en 2011
 ERRORES_COMUNAS <- anti_join(IMG2A_09,euro_09,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
   semi_join(COMUNAS_11, by="CODGEO") %>% 
   full_join(ERRORES_COMUNAS)
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que NO existÌan NI en 2009 NI en 2011
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que NO exist√≠an NI en 2009 NI en 2011
 ERRORES_COMUNAS <- anti_join(IMG2A_09,euro_09,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
