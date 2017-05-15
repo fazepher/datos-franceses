@@ -3,14 +3,13 @@
 ###################################### FAZH ITAM 2017 130435 ############################################
 #########################################################################################################
 
-### PRE¡MBULO ####
+### PRE√ÅMBULO ####
 library(tidyverse)
 library(magrittr)
 library(stringr)
 library(forcats)
-setwd("C:/Users/Fernando Antonio/Documents/ITAM/Tesis/datos-franceses")
 
-### DATOS DE VOTACI”N POR CASILLA ####
+### DATOS DE VOTACI√ìN POR CASILLA ####
 
 legis_12 <- read_csv2(file = "DATOS_BRUTOS/LG12_Bvot_T1T2_FAZH.txt", 
                       col_names = c("VUELTA",
@@ -21,22 +20,22 @@ legis_12 <- read_csv2(file = "DATOS_BRUTOS/LG12_Bvot_T1T2_FAZH.txt",
                                     "VOT_CANDIDATO"),
                       col_types = c("ccccccciiicccci"),
                       locale = locale(encoding = "latin1")) %>%
-  # Filtramos a las comunas de Francia continental y CÛrsega
+  # Filtramos a las comunas de Francia continental y C√≥rsega
   filter(!(substr(COD_DEPARTAMENTO,1,1) == "Z")) %>% 
   # Filtramos a los resultados de la primera vuelta
   filter(VUELTA == 1) %>%
-  # Modificamos los Nombres de las comunas cuando son Arrondisements de ParÌs, Lyon y Marsella
+  # Modificamos los Nombres de las comunas cuando son Arrondisements de Par√≠s, Lyon y Marsella
   mutate(NOM_COMUNA = if_else(NOM_COMUNA == "Paris",paste("Paris",substr(CASILLA,1,2), sep = " "),
                               if_else(NOM_COMUNA == "Lyon", paste("Lyon",substr(CASILLA,2,2), sep = " "),
                                       if_else(NOM_COMUNA == "Marseille",paste("Marseille",substr(CASILLA,1,2), sep = " "),
                                               NOM_COMUNA)))) %>%
-  # Agregamos el CODGEO del INSEE para las comunas (ajustando para los Arrondisements de ParÌs, Lyon y Marsella)
+  # Agregamos el CODGEO del INSEE para las comunas (ajustando para los Arrondisements de Par√≠s, Lyon y Marsella)
   mutate(CODGEO = paste(COD_DEPARTAMENTO,COD_COMUNA,sep="")) %>%
   mutate(CODGEO = if_else(CODGEO == "75056",paste("751",substr(CASILLA,1,2),sep=""),
                           if_else(CODGEO == "69123", paste("6938",substr(CASILLA,2,2),sep=""),
                                   if_else(CODGEO == "13055",paste("132",substr(CASILLA,1,2),sep=""),
                                                      CODGEO)))) %>%
-  # Modificamos el cÛdigo de casillas para hacerlo ˙nico
+  # Modificamos el c√≥digo de casillas para hacerlo √∫nico
   mutate(CASILLA = paste(CODGEO,CASILLA,sep="_"))
   
 
@@ -73,7 +72,7 @@ IMG2A_12 <- read_csv2(file = "DATOS_BRUTOS/BTT_TD_IMG2A_2012.txt",
                       col_types = "cccccccd",
                       locale = locale(decimal_mark = ",", encoding = "latin1"),
                       skip = 1) %>% 
-  # AtenciÛn con los cÛdigos
+  # Atenci√≥n con los c√≥digos
   mutate(C_SEXO = factor(C_SEXO,labels = c("HOMBRES","MUJERES")),
          C_EDAD4_A = factor(C_EDAD4_A),
          C_TIPO_ACT = factor(C_TIPO_ACT,labels = c("EMPLEADOS","DESEMPLEADOS","RETIRADOS","ESTUDIANTES","HOGAR","OTROS")),
@@ -84,11 +83,11 @@ IMG2A_12 <- read_csv2(file = "DATOS_BRUTOS/BTT_TD_IMG2A_2012.txt",
 
 ### ERRORES DE  COMUNAS ####
 
-# Para homologar resultados electorales y censo necesitamos las geografÌas administrativas oficiales para cada base
+# Para homologar resultados electorales y censo necesitamos las geograf√≠as administrativas oficiales para cada base
 COMUNAS_12 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2012.txt", 
                          delim = "\t",locale = locale(encoding = "latin1")) %>% 
   transmute(CODGEO = paste(DEP,COM,sep=""), NOM_COMUNA = NCCENR, ART = ARTMIN) %>% 
-  # AÒadimos el artÌculo al nombre
+  # A√±adimos el art√≠culo al nombre
   mutate(NOM_COMUNA = if_else(is.na(ART),
                               NOM_COMUNA,
                               paste(substring(ART,2,nchar(ART)-1),NOM_COMUNA,sep=" "))) %>% 
@@ -103,7 +102,7 @@ COMUNAS_12 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2012.txt",
 COMUNAS_14 <- read_delim(file = "DATOS_ADMINISTRATIVOS/comsimp2014.txt", 
                          delim = "\t",locale = locale(encoding = "latin1")) %>% 
   transmute(CODGEO = paste(DEP,COM,sep=""), NOM_COMUNA = NCCENR, ART = ARTMIN) %>% 
-  # AÒadimos el artÌculo al nombre
+  # A√±adimos el art√≠culo al nombre
   mutate(NOM_COMUNA = if_else(is.na(ART),
                               NOM_COMUNA,
                               paste(substring(ART,2,nchar(ART)-1),NOM_COMUNA,sep=" "))) %>% 
@@ -122,33 +121,33 @@ legis_12 <- legis_12 %>%
   select(-NOM_COMUNA.y) %>%
   rename(NOM_COMUNA = NOM_COMUNA.x)
 
-# Comunas que est·n en los resultados electorales, pero no en el censo y que sÌ existÌan en 2012
+# Comunas que est√°n en los resultados electorales, pero no en el censo y que s√≠ exist√≠an en 2012
 ERRORES_COMUNAS <- anti_join(legis_12,IMG2A_12,by="CODGEO") %>% 
   semi_join(COMUNAS_12,by="CODGEO") %>% 
   select(CODGEO,NOM_COMUNA,NOM_DEPARTAMENTO) %>% 
   distinct %>% 
   cbind(MOTIVO_ERROR = NA)
 # Errores por que se agregaron a otra comuna 
-ERRORES_COMUNAS$MOTIVO_ERROR <- c("01/01/2013 : AgniËres-en-DÈvoluy devient commune dÈlÈguÈe au sein de DÈvoluy (commune nouvelle).",
-                                  "01/01/2013 : BÈnÈvent-et-Charbillac devient commune dÈlÈguÈe au sein de Saint-Bonnet-en-Champsaur (commune nouvelle).",
-                                  "01/01/2013 : La Cluse devient commune dÈlÈguÈe au sein de DÈvoluy (commune nouvelle).",
-                                  "01/01/2013 : Les Infournas devient commune dÈlÈguÈe au sein de Saint-Bonnet-en-Champsaur (commune nouvelle).",
-                                  "01/01/2013 : Saint-Disdier devient commune dÈlÈguÈe au sein de DÈvoluy (commune nouvelle).",
-                                  "01/01/2013 : Melay devient commune dÈlÈguÈe au sein de ChemillÈ-Melay (commune nouvelle).",
-                                  "01/01/2013 : Montpollin devient commune dÈlÈguÈe au sein de BaugÈ-en-Anjou (commune nouvelle).",
-                                  "01/01/2013 : PontignÈ devient commune dÈlÈguÈe au sein de BaugÈ-en-Anjou (commune nouvelle).",
-                                  "01/01/2013 : Saint-Martin-d'ArcÈ devient commune dÈlÈguÈe au sein de BaugÈ-en-Anjou (commune nouvelle).",
-                                  "01/01/2013 : Le Vieil-BaugÈ devient commune dÈlÈguÈe au sein de BaugÈ-en-Anjou (commune nouvelle).",
-                                  "01/01/2013 : Vaulandry devient commune dÈlÈguÈe au sein de Clefs-Val d'Anjou (commune nouvelle).",
-                                  "28/02/2013 : Pautaines-Augeville devient commune dÈlÈguÈe au sein d'…pizon (commune nouvelle).",
-                                  "01/01/2013 : Bourg-de-Thizy devient commune dÈlÈguÈe au sein de Thizy-les-Bourgs (commune nouvelle).",
-                                  "01/01/2013 : La Chapelle-de-Mardore devient commune dÈlÈguÈe au sein de Thizy-les-Bourgs (commune nouvelle).",
-                                  "01/01/2013 : Mardore devient commune dÈlÈguÈe au sein de Thizy-les-Bourgs (commune nouvelle).",
-                                  "01/01/2013 : Marnand devient commune dÈlÈguÈe au sein de Thizy-les-Bourgs (commune nouvelle).",
-                                  "01/01/2013 : Nuelles devient commune dÈlÈguÈe au sein de Saint-Germain-Nuelles (commune nouvelle).",
-                                  "01/01/2013 : VitrÈ devient commune dÈlÈguÈe au sein de Beaussais-VitrÈ (commune nouvelle).",
-                                  "01/01/2013 : Voultegon devient commune dÈlÈguÈe au sein de Voulmentin (commune nouvelle).",
-                                  "01/01/2013 : Le Magny devient commune dÈlÈguÈe au sein de Fontenoy-le-Ch‚teau (commune nouvelle).")
+ERRORES_COMUNAS$MOTIVO_ERROR <- c("01/01/2013 : Agni√®res-en-D√©voluy devient commune d√©l√©gu√©e au sein de D√©voluy (commune nouvelle).",
+                                  "01/01/2013 : B√©n√©vent-et-Charbillac devient commune d√©l√©gu√©e au sein de Saint-Bonnet-en-Champsaur (commune nouvelle).",
+                                  "01/01/2013 : La Cluse devient commune d√©l√©gu√©e au sein de D√©voluy (commune nouvelle).",
+                                  "01/01/2013 : Les Infournas devient commune d√©l√©gu√©e au sein de Saint-Bonnet-en-Champsaur (commune nouvelle).",
+                                  "01/01/2013 : Saint-Disdier devient commune d√©l√©gu√©e au sein de D√©voluy (commune nouvelle).",
+                                  "01/01/2013 : Melay devient commune d√©l√©gu√©e au sein de Chemill√©-Melay (commune nouvelle).",
+                                  "01/01/2013 : Montpollin devient commune d√©l√©gu√©e au sein de Baug√©-en-Anjou (commune nouvelle).",
+                                  "01/01/2013 : Pontign√© devient commune d√©l√©gu√©e au sein de Baug√©-en-Anjou (commune nouvelle).",
+                                  "01/01/2013 : Saint-Martin-d'Arc√© devient commune d√©l√©gu√©e au sein de Baug√©-en-Anjou (commune nouvelle).",
+                                  "01/01/2013 : Le Vieil-Baug√© devient commune d√©l√©gu√©e au sein de Baug√©-en-Anjou (commune nouvelle).",
+                                  "01/01/2013 : Vaulandry devient commune d√©l√©gu√©e au sein de Clefs-Val d'Anjou (commune nouvelle).",
+                                  "28/02/2013 : Pautaines-Augeville devient commune d√©l√©gu√©e au sein d'√âpizon (commune nouvelle).",
+                                  "01/01/2013 : Bourg-de-Thizy devient commune d√©l√©gu√©e au sein de Thizy-les-Bourgs (commune nouvelle).",
+                                  "01/01/2013 : La Chapelle-de-Mardore devient commune d√©l√©gu√©e au sein de Thizy-les-Bourgs (commune nouvelle).",
+                                  "01/01/2013 : Mardore devient commune d√©l√©gu√©e au sein de Thizy-les-Bourgs (commune nouvelle).",
+                                  "01/01/2013 : Marnand devient commune d√©l√©gu√©e au sein de Thizy-les-Bourgs (commune nouvelle).",
+                                  "01/01/2013 : Nuelles devient commune d√©l√©gu√©e au sein de Saint-Germain-Nuelles (commune nouvelle).",
+                                  "01/01/2013 : Vitr√© devient commune d√©l√©gu√©e au sein de Beaussais-Vitr√© (commune nouvelle).",
+                                  "01/01/2013 : Voultegon devient commune d√©l√©gu√©e au sein de Voulmentin (commune nouvelle).",
+                                  "01/01/2013 : Le Magny devient commune d√©l√©gu√©e au sein de Fontenoy-le-Ch√¢teau (commune nouvelle).")
 
 # Se revisaron, las agrupaciones en el sitio del INSEE
 # En los resultados electorales cambiamos primero los CODGEO para las comunas que se agregaron 
@@ -178,19 +177,19 @@ legis_12 <- legis_12 %>%
                       if_else(CODGEO == "79030", "030",
                       if_else(CODGEO == "79242", "242",
                       if_else(CODGEO == "88176", "176",COD_COMUNA)))))))))))) %>%
-  mutate(NOM_COMUNA = if_else(CODGEO == "05139", "DÈvoluy",
+  mutate(NOM_COMUNA = if_else(CODGEO == "05139", "D√©voluy",
                       if_else(CODGEO == "05132", "Saint-Bonnet-en-Champsaur",
-                      if_else(CODGEO == "49092", "ChemillÈ-Melay", 
-                      if_else(CODGEO == "49018", "BaugÈ-en-Anjou",
+                      if_else(CODGEO == "49092", "Chemill√©-Melay", 
+                      if_else(CODGEO == "49018", "Baug√©-en-Anjou",
                       if_else(CODGEO == "49101", "Clefs-Val d'Anjou",
-                      if_else(CODGEO == "52187", "…pizon",
+                      if_else(CODGEO == "52187", "√âpizon",
                       if_else(CODGEO == "69248", "Thizy-les-Bourgs",
                       if_else(CODGEO == "69208", "Saint-Germain-Nuelles",
-                      if_else(CODGEO == "79030", "Beaussais-VitrÈ",
+                      if_else(CODGEO == "79030", "Beaussais-Vitr√©",
                       if_else(CODGEO == "79242", "Voulmentin",
-                      if_else(CODGEO == "88176", "Fontenoy-le-Ch‚teau",NOM_COMUNA))))))))))))
+                      if_else(CODGEO == "88176", "Fontenoy-le-Ch√¢teau",NOM_COMUNA))))))))))))
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que sÌ existÌan en 2012
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que s√≠ exist√≠an en 2012
 ERRORES_COMUNAS <- anti_join(IMG2A_12,legis_12,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
@@ -218,7 +217,7 @@ IMG2A_12 <- ERRORES_COMUNAS %>%
   {filter(IMG2A_12,!{CODGEO %in% .})}
 
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que sÌ existÌan en 2014
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que s√≠ exist√≠an en 2014
 ERRORES_COMUNAS <- anti_join(IMG2A_12,legis_12,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
@@ -227,8 +226,8 @@ ERRORES_COMUNAS <- anti_join(IMG2A_12,legis_12,by="CODGEO") %>%
 
 # Errores por que se agregaron a otra comuna 
 ERRORES_COMUNAS <- ERRORES_COMUNAS %>%  
-  mutate(MOTIVO_ERROR = if_else(CODGEO == "76095","01/01/2014 : Bihorel est rÈtablie. 
-                                01/01/2012 : Bihorel devient commune dÈlÈguÈe au sein de Bois-Guillaume-Bihorel (commune nouvelle).",
+  mutate(MOTIVO_ERROR = if_else(CODGEO == "76095","01/01/2014 : Bihorel est r√©tablie. 
+                                01/01/2012 : Bihorel devient commune d√©l√©gu√©e au sein de Bois-Guillaume-Bihorel (commune nouvelle).",
                                 MOTIVO_ERROR))
 
 
@@ -244,7 +243,7 @@ IMG2A_12 <- IMG2A_12 %>%
   summarise_if(is.numeric,funs(sum(.,na.rm=TRUE))) %>%
   ungroup
 
-# Comunas que est·n en el censo, pero no en los resultados electorales y que NO existÌan NI en 2012 NI en 2014
+# Comunas que est√°n en el censo, pero no en los resultados electorales y que NO exist√≠an NI en 2012 NI en 2014
 ERRORES_COMUNAS <- anti_join(IMG2A_12,legis_12,by="CODGEO") %>% 
   select(CODGEO,NIVEL) %>% 
   distinct %>%
