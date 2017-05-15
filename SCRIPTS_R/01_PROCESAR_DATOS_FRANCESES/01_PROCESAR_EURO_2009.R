@@ -43,7 +43,7 @@ euro_09 <- read_csv2(file = "DATOS_BRUTOS/ER09_BVOT_FAZH.txt",
 # Hay una fila extra del candidato LOUIS de la lista inexistente LDD
 euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "LOUIS" & ETIQUETA == "LDD"})
 # Hay una fila extra del candidato SANMARTIN de la lista inexistente LDV
-euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "LOUIS" & ETIQUETA == "LDD"})
+euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "SANMARTIN" & ETIQUETA == "LDV"})
 # Hay una fila extra de la candidata GOMEZ de la lista inexistente LPC
 euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "GOMEZ" & ETIQUETA == "LPC"})
 
