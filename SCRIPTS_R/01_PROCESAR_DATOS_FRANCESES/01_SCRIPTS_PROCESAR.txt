@@ -1,0 +1,1 @@
+En esta carpeta se encuentran los scripts que procesan datos brutos para cada elección. 
