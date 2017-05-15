@@ -1,0 +1,105 @@
+En esta carpeta se encuentran los datos brutos que se descargaron, 
+así como una primera etapa de limpieza en la que se remueven los códigos que siguen: 
+
+https://www.data.gouv.fr/s/resources/election-presidentielle-2007-resultats-par-bureaux-de-vote/20151001-154056/PR07_Bvot_T1T2.txt
+
+--  Résultats par bureau de vote Présidentielles 2007                  
+--                                                                            
+--                                                                            
+-- Champ 1  : N° tour                                                         
+-- Champ 2  : Code département                                                
+-- Champ 3  : Code de la commune                                              
+-- Champ 4  : Nom de la commune                                               
+-- Champ 5  : N° de bureau de vote                                            
+-- Champ 6  : Inscrits                                                        
+-- Champ 7  : Votants                                                         
+-- Champ 8  : Exprimés                                                        
+-- Champ 9  : N° de dépôt du candidat                                         
+-- Champ 10 : Nom du candidat                                                 
+-- Champ 11 : Prénom du candidat                                              
+-- Champ 12 : Code nuance du candidat                                         
+-- Champ 13 : Nombre de voix du candidat                                      
+--  
+
+https://www.data.gouv.fr/s/resources/elections-legislatives-2007-resultats-par-bureaux-de-vote/20150925-105638/LG07_Bvot_T1T2.txt
+
+--  Résultats par bureau de vote Législatives 2007                    
+--                                                                            
+--                                                                            
+-- Champ 1  : N° tour                                                         
+-- Champ 2  : Code département                                                
+-- Champ 3  : Code de la commune                                              
+-- Champ 4  : Nom de la commune                                               
+-- Champ 5  : N° de bureau de vote                                            
+-- Champ 6  : Inscrits                                                        
+-- Champ 7  : Votants                                                         
+-- Champ 8  : Exprimés                                                        
+-- Champ 9  : N° de dépôt du candidat                                         
+-- Champ 10 : Nom du candidat                                                 
+-- Champ 11 : Prénom du candidat                                              
+-- Champ 12 : Code nuance du candidat                                         
+-- Champ 13 : Nombre de voix du candidat                                      
+--                                                                            
+
+https://www.insee.fr/fr/statistiques/2120456?sommaire=2402753#consulter
+
+Liste des variables
+
+AGE4 : âge regroupé (4 classes d'âges)
+00 : moins de 15 ans
+15 : 15 à 24 ans
+25 : 25 à 54 ans
+55 : 55 ans ou plus
+IMMI : situation quant à l'immigration
+1 : immigrés
+2 : non immigrés
+SEXE : sexe
+1 : hommes
+2 : femmes
+TACTR : type d'activité
+11 : actifs ayant un emploi
+12 : chômeurs
+21 : retraités ou préretraités
+22 : élèves, étudiants, stagiaires non rémunérés
+24 : femmes ou hommes au foyer
+26 : autres inactifs
+
+https://www.data.gouv.fr/s/resources/elections-legislatives-2012-resultats-par-bureaux-de-vote/20150925-103435/LG12_Bvot_T1T2.txt
+
+--  Résultats par bureau de vote Législatives 2012                    
+--                                                                            
+-- Champ 1  : N° tour                                                         
+-- Champ 2  : Code département                                                
+-- Champ 3  : Code de la commune                                              
+-- Champ 4  : Nom de la commune                                               
+-- Champ 5  : N° de circonscription Lg                                            
+-- Champ 6  : N° de canton                                            
+-- Champ 7  : N° de bureau de vote                                            
+-- Champ 8  : Inscrits                                                        
+-- Champ 9  : Votants                                                         
+-- Champ 10 : Exprimés                                                        
+-- Champ 11 : N° de dépôt du candidat                                         
+-- Champ 12 : Nom du candidat                                                 
+-- Champ 13 : Prénom du candidat                                              
+-- Champ 14 : Code nuance du candidat                                         
+-- Champ 15 : Nombre de voix du candidat                                   
+-- 
+
+https://www.data.gouv.fr/s/resources/elections-europeennes-2009-resultats-par-bureaux-de-vote/20150925-111605/ER09_BVOT.txt
+
+--  Européennes 2009 - Résultats par bureau de vote 
+--
+-- 
+-- Champ 1  : N° tour
+-- Champ 2  : Code département
+-- Champ 3  : Code commune
+-- Champ 4  : Nom de la commune
+-- Champ 5  : N° de bureau de vote 
+-- Champ 6  : Inscrits 
+-- Champ 7  : Votants 
+-- Champ 8  : Exprimés
+-- Champ 9  : Nom du candidat tête de liste
+-- Champ 10 : Prénom du candidat  tête de liste
+-- Champ 11 : Code nuance de la liste 
+-- Champ 12 : Nombre de voix 
+-- 
