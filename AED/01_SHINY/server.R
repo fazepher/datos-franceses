@@ -48,11 +48,11 @@ calcula_pob_por_comuna <- function(eleccion,variables = FALSE, porcentaje = TRUE
 ### DATOS GENERALES ####
 
 # Leemos los datos ya procesados y unificados
-load("DATOS_PROCESADOS/PRESIDENCIALES_2007.RData")
-load("DATOS_PROCESADOS/LEGISLATIVAS_2007.RData")
-load("DATOS_PROCESADOS/EUROPEAS_2009.RData")
-load("DATOS_PROCESADOS/PRESIDENCIALES_2012.RData")
-load("DATOS_PROCESADOS/LEGISLATIVAS_2012.RData")
+load("DATOS_UNFICADOS/PRESIDENCIALES_2007.RData")
+load("DATOS_UNFICADOS/LEGISLATIVAS_2007.RData")
+load("DATOS_UNFICADOS/EUROPEAS_2009.RData")
+load("DATOS_UNFICADOS/PRESIDENCIALES_2012.RData")
+load("DATOS_UNFICADOS/LEGISLATIVAS_2012.RData")
 
 # Vector de colores de Familias PolIticas
 colores_familias <- c("FN"="darkslategrey",
