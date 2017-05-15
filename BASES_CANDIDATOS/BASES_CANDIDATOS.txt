@@ -1,0 +1,1 @@
+Esta carpeta contiene las bases de candidatos de las elecciones que se utilizan para definir los grupos de candidatos. 
