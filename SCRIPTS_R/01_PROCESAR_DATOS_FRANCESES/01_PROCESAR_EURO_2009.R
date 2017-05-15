@@ -35,7 +35,17 @@ euro_09 <- read_csv2(file = "DATOS_BRUTOS/ER09_BVOT_FAZH.txt",
                                                      CODGEO)))) %>%
   # Modificamos el código de casillas para hacerlo único
   mutate(CASILLA = paste(CODGEO,CASILLA,sep="_"))
-  
+
+# Se detectaron algunos errores de origen en la base de resultados electorales. 
+# Se eliminan en este momento, al verificar los datos oficiales de forma manual en 
+# http://www.interieur.gouv.fr/Elections/Les-resultats/Europeennes/elecresult__europeennes_2009/(path)/europeennes_2009/05/082/001/001001.html
+
+# Hay una fila extra del candidato LOUIS de la lista inexistente LDD
+euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "LOUIS" & ETIQUETA == "LDD"})
+# Hay una fila extra del candidato SANMARTIN de la lista inexistente LDV
+euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "LOUIS" & ETIQUETA == "LDD"})
+# Hay una fila extra de la candidata GOMEZ de la lista inexistente LPC
+euro_09 <- filter(euro_09,!{APELLIDO_CANDIDATO == "GOMEZ" & ETIQUETA == "LPC"})
 
 # Agregamos los Departamentos
 # https://www.insee.fr/fr/information/2560452
