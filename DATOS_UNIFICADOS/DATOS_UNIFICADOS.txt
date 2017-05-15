@@ -1,0 +1,1 @@
+En esta carpeta se encuentran los archivos de datos de R ya unificados por el script 02. 
