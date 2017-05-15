@@ -1,13 +1,12 @@
 ################################# PROCESAMIENTO DE DATOS FRANCESES ######################################
-################################ UNIFICACI”N DE DATOS 2007/2009/2012 ####################################
+################################ UNIFICACI√ìN DE DATOS 2007/2009/2012 ####################################
 ###################################### FAZH ITAM 2017 130435 ############################################
 #########################################################################################################
 
-### PRE¡MBULO ####
+### PRE√ÅMBULO ####
 library(tidyverse)
 library(magrittr)
 
-setwd("C:/Users/Fernando Antonio/Documents/ITAM/Tesis/datos-franceses")
 
 ### LEEMOS LOS DATOS ####
 load("DATOS_PROCESADOS/PRESIDENCIALES_2007.RData")
@@ -16,7 +15,7 @@ load("DATOS_PROCESADOS/EUROPEAS_2009.RData")
 load("DATOS_PROCESADOS/PRESIDENCIALES_2012.RData")
 load("DATOS_PROCESADOS/LEGISLATIVAS_2012.RData")
 
-### BASE GENERAL DE C”DIGOS CODGEO QUE VAN CAMBIANDO ####
+### BASE GENERAL DE C√ìDIGOS CODGEO QUE VAN CAMBIANDO ####
 
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = character(), 
                                   CODGEO_2009 = character(), 
@@ -26,13 +25,13 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = character(),
 
 variables_base_comunas <- names(PRESIDENCIALES_2007$BASE_COMUNAS)
 
-### VERIFICAMOS QUE BASES DEL 2007 EST…N HOMOLOGADAS ####
+### VERIFICAMOS QUE BASES DEL 2007 EST√âN HOMOLOGADAS ####
 
-# No deben haber problemas dentro del mismo aÒo, por el procesamiento anterior
+# No deben haber problemas dentro del mismo a√±o, por el procesamiento anterior
 anti_join(PRESIDENCIALES_2007$BASE_COMUNAS, LEGISLATIVAS_2007$BASE_COMUNAS, by = variables_base_comunas) 
 anti_join(LEGISLATIVAS_2007$BASE_COMUNAS, PRESIDENCIALES_2007$BASE_COMUNAS, by = variables_base_comunas)
 
-### VERIFICAMOS QUE BASES DEL 2012 EST…N HOMOLOGADAS ####
+### VERIFICAMOS QUE BASES DEL 2012 EST√âN HOMOLOGADAS ####
 
 anti_join(PRESIDENCIALES_2012$BASE_COMUNAS, LEGISLATIVAS_2012$BASE_COMUNAS, by = variables_base_comunas) 
 anti_join(LEGISLATIVAS_2012$BASE_COMUNAS, PRESIDENCIALES_2012$BASE_COMUNAS, by = variables_base_comunas)
@@ -67,7 +66,7 @@ anti_join(PRESIDENCIALES_2007$BASE_COMUNAS,EUROPEAS_2009$BASE_COMUNAS,by="NOM_CO
   left_join(EUROPEAS_2009$BASE_COMUNAS,by=variables_base_comunas[-2]) %T>%
   {nrow(.) %>% print}
 
-# Por regla general tomamos como nombre v·lido el m·s reciente. 
+# Por regla general tomamos como nombre v√°lido el m√°s reciente. 
 
 PRESIDENCIALES_2007$BASE_COMUNAS %<>% 
   left_join(EUROPEAS_2009$BASE_COMUNAS,by=variables_base_comunas[-2]) %>% 
@@ -81,7 +80,7 @@ LEGISLATIVAS_2007$BASE_COMUNAS %<>%
   select(-NOM_COMUNA.y) %>%
   rename(NOM_COMUNA=NOM_COMUNA.x)
 
-# Vemos si hay m·s problemas de 2007 a 2009
+# Vemos si hay m√°s problemas de 2007 a 2009
 anti_join(PRESIDENCIALES_2007$BASE_COMUNAS, EUROPEAS_2009$BASE_COMUNAS, by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2007"))
 
@@ -105,13 +104,13 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "31483",
                                   CODGEO_2012 = "31300") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Saint-Symphorien se separa de HÈdÈ
+# Saint-Symphorien se separa de H√©d√©
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "35130", 
                                   CODGEO_2009 = "35317",
                                   CODGEO_2012 = "35317") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Verquigneul se separa de BÈthune
+# Verquigneul se separa de B√©thune
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "62119", 
                                   CODGEO_2009 = "62847",
                                   CODGEO_2012 = "62847") %>% 
@@ -124,7 +123,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "89387",
   full_join(BASE_CAMBIOS_CODGEO)
 
 
-# Vemos si hay m·s problemas de 2009 a 2007
+# Vemos si hay m√°s problemas de 2009 a 2007
 anti_join(EUROPEAS_2009$BASE_COMUNAS, PRESIDENCIALES_2007$BASE_COMUNAS, by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2009"))
 
@@ -142,7 +141,7 @@ anti_join(EUROPEAS_2009$BASE_COMUNAS,PRESIDENCIALES_2012$BASE_COMUNAS,by="CODGEO
 
 # Hubo agrupaciones de comunas y que resultaron en varias comunas. Revisar los Motivos de Errores en las bases de 2012.
 
-# Se agruparon comunas en DÈvoluy
+# Se agruparon comunas en D√©voluy
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = c("05002","05042","05138"), 
                                   CODGEO_2009 = c("05002","05042","05138"),
                                   CODGEO_2012 = "05139") %>% 
@@ -154,13 +153,13 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = c("05020","05067"),
                                   CODGEO_2012 = "05132") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Se agruparon comunas en BaugÈ-en-Anjou
+# Se agruparon comunas en Baug√©-en-Anjou
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "49199", 
                                   CODGEO_2009 = "49199",
                                   CODGEO_2012 = "49092") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Se agruparon comunas en ChemillÈ-Melay
+# Se agruparon comunas en Chemill√©-Melay
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = c("49213","49245","49303","49372"), 
                                   CODGEO_2009 = c("49213","49245","49303","49372"),
                                   CODGEO_2012 = "49018") %>% 
@@ -172,7 +171,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "49380",
                                   CODGEO_2012 = "49101") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Se agruparon comunas en …pizon
+# Se agruparon comunas en √âpizon
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "52379", 
                                   CODGEO_2009 = "52379",
                                   CODGEO_2012 = "52187") %>% 
@@ -190,7 +189,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "69144",
                                   CODGEO_2012 = "69208") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Se agruparon comunas en Beaussais-VitrÈ
+# Se agruparon comunas en Beaussais-Vitr√©
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "79353", 
                                   CODGEO_2009 = "79353",
                                   CODGEO_2012 = "79030") %>% 
@@ -202,7 +201,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "79356",
                                   CODGEO_2012 = "79242") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Se agruparon comunas en Fontenoy-le-Ch‚teau
+# Se agruparon comunas en Fontenoy-le-Ch√¢teau
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "88282", 
                                   CODGEO_2009 = "88282",
                                   CODGEO_2012 = "88176") %>% 
@@ -214,14 +213,14 @@ anti_join(EUROPEAS_2009$BASE_COMUNAS,PRESIDENCIALES_2012$BASE_COMUNAS,by="NOM_CO
   left_join(PRESIDENCIALES_2012$BASE_COMUNAS,by=variables_base_comunas[-2]) %T>%
   {nrow(.) %>% print}
 
-# Por regla general tomamos como nombre v·lido el m·s reciente. 
+# Por regla general tomamos como nombre v√°lido el m√°s reciente. 
 EUROPEAS_2009$BASE_COMUNAS %<>% 
   left_join(PRESIDENCIALES_2012$BASE_COMUNAS,by=variables_base_comunas[-2]) %>% 
   mutate(NOM_COMUNA.x=if_else(is.na(NOM_COMUNA.y),NOM_COMUNA.x,NOM_COMUNA.y)) %>% 
   select(-NOM_COMUNA.y) %>%
   rename(NOM_COMUNA=NOM_COMUNA.x)
 
-# Vemos si hay m·s problemas de 2009 a 2012
+# Vemos si hay m√°s problemas de 2009 a 2012
 anti_join(EUROPEAS_2009$BASE_COMUNAS,PRESIDENCIALES_2012$BASE_COMUNAS,  by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2009"))
 
@@ -237,7 +236,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "28042",
                                   CODGEO_2012 = "28361") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Vemos si hay m·s problemas de 2009 a 2012
+# Vemos si hay m√°s problemas de 2009 a 2012
 anti_join(EUROPEAS_2009$BASE_COMUNAS,PRESIDENCIALES_2012$BASE_COMUNAS,  by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2009"))
 
@@ -258,13 +257,13 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "52332",
                                   CODGEO_2012 = c("52033","52465")) %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# ChÈzeaux se separa de Varennes-sur-Amance
+# Ch√©zeaux se separa de Varennes-sur-Amance
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "52504", 
                                   CODGEO_2009 = "52504",
                                   CODGEO_2012 = "52124") %>% 
   full_join(BASE_CAMBIOS_CODGEO)
 
-# Laneuville-‡-RÈmy se separa de Robert-Magny
+# Laneuville-√†-R√©my se separa de Robert-Magny
 BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "52427", 
                                   CODGEO_2009 = "52427",
                                   CODGEO_2012 = "52266") %>% 
@@ -277,7 +276,7 @@ BASE_CAMBIOS_CODGEO <- data_frame(CODGEO_2007 = "52031",
   full_join(BASE_CAMBIOS_CODGEO)
 
 
-# Vemos si hay m·s problemas de 2012 a 2009
+# Vemos si hay m√°s problemas de 2012 a 2009
 anti_join(PRESIDENCIALES_2012$BASE_COMUNAS, EUROPEAS_2009$BASE_COMUNAS, by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2012"))
 
@@ -297,7 +296,7 @@ anti_join(PRESIDENCIALES_2007$BASE_COMUNAS,PRESIDENCIALES_2012$BASE_COMUNAS,by="
   left_join(PRESIDENCIALES_2012$BASE_COMUNAS,by=variables_base_comunas[-2]) %T>%
   {nrow(.) %>% print}
 
-# Por regla general tomamos como nombre v·lido el m·s reciente. 
+# Por regla general tomamos como nombre v√°lido el m√°s reciente. 
 
 PRESIDENCIALES_2007$BASE_COMUNAS %<>% 
   left_join(PRESIDENCIALES_2012$BASE_COMUNAS,by=variables_base_comunas[-2]) %>% 
@@ -311,7 +310,7 @@ LEGISLATIVAS_2007$BASE_COMUNAS %<>%
   select(-NOM_COMUNA.y) %>%
   rename(NOM_COMUNA=NOM_COMUNA.x)
 
-# Vemos si hay m·s problemas de 2007 a 2012
+# Vemos si hay m√°s problemas de 2007 a 2012
 anti_join(PRESIDENCIALES_2007$BASE_COMUNAS, PRESIDENCIALES_2012$BASE_COMUNAS, by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2007"))
 
@@ -332,7 +331,7 @@ anti_join(PRESIDENCIALES_2012$BASE_COMUNAS,PRESIDENCIALES_2007$BASE_COMUNAS, by=
 anti_join(PRESIDENCIALES_2012$BASE_COMUNAS,PRESIDENCIALES_2007$BASE_COMUNAS,by="NOM_COMUNA") %>%
   anti_join(BASE_CAMBIOS_CODGEO,by = c("CODGEO"="CODGEO_2012"))
 
-# Vemos si hay m·s problemas de 2012 a 2007
+# Vemos si hay m√°s problemas de 2012 a 2007
 anti_join(PRESIDENCIALES_2012$BASE_COMUNAS, PRESIDENCIALES_2007$BASE_COMUNAS, by = variables_base_comunas) %>%
   anti_join(BASE_CAMBIOS_CODGEO,by=c("CODGEO"="CODGEO_2012"))
 
